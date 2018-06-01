@@ -2,3 +2,5 @@
 <input type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }">
 <input type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }">
 <button (click)="doCalculation()">Submit</button>
+
+<div>{{ bill }}</div>

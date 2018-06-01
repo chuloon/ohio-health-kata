@@ -13,16 +13,45 @@ export class AppComponent {
   bedTime;
   endTime;
 
+  bill = 0;
+
   doCalculation = () => {
-    const start = moment(this.startTime, 'h:m a');
-    const bed = moment(this.bedTime, 'h:m a');
-    const end = moment(this.endTime, 'h:m a');
+    this.bill = 0;
+
+    let start = moment(this.startTime, 'h:m a');
+    if(start.isBefore(moment('4:00 pm', 'h:m a'))) {
+      start = moment(start).add(1, 'd');
+    }
+
+    let bed = moment(this.bedTime, 'h:m a');
+    if(bed.isBefore(moment('4:00 pm', 'h:m a'))) {
+      bed = moment(bed).add(1, 'd');
+    }
+
+    let end = moment(this.endTime, 'h:m a');
+    if(end.isBefore(moment('4:00 pm', 'h:m a'))) {
+      end = moment(end).add(1, 'd');
+    }
+
+    const midnight = moment('11:59 pm', 'h:m a');
 
     let current = start;
     
     while(!(moment(current).format('h:m a') === moment(end).format('h:m a'))) {
+      debugger;
+      if(current.isSameOrAfter(midnight)) {
+        this.bill += 16;
+      }
+      else if(current.isBefore(bed)) {
+        this.bill += 12;
+      }
+      else if(current.isBefore(midnight) && current.isSameOrAfter(bed)) {
+        this.bill += 8;
+      }
+
       current = moment(current).add(1, 'h');
-      console.log(current.format('h:m a'));
     }
+
+    console.log('$' + this.bill);
   }
 }
