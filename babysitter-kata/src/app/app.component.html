@@ -3,23 +3,20 @@
 
   <div class="fields-container">
     <span>If my babysitting shift is from </span>
-    <input type="text" [(ngModel)]="startTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder">
+    <input type="text" [(ngModel)]="startTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
     <span> to </span>
-    <input type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder">
+    <input type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
   </div>
 
   <div class="fields-container">
     <span> and I put them to bed at </span>
-    <input type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder">
+    <input type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
   </div>
 
+  <div class="bill-label">
+    <span>I will make...</span>
+  </div>
   <div>
-    <span>I will make ${{ bill }} that night.</span>
+    <span id="bill-amount" [ngClass]="{ show: showBill }">${{ bill }}</span>
   </div>
-
-
-
-  <button (click)="doCalculation()">Submit</button>
-
-
 </div>

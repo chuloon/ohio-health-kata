@@ -7,6 +7,23 @@
     align-items: center;
     justify-content: center;
 
+    .bill-label {
+        margin-top: 20px;
+    }
+
+    #bill-amount {
+        font-size: 6vh;
+        opacity: 0;
+        transform: translateY(-15px);
+        transition: opacity 0.8s 0.2s, transform 1s;
+        display: block;
+
+        &.show {
+            opacity: 1;
+            transform: translateY(0px);
+        }
+    }
+
     .fields-container {
         padding-bottom: 5px;
     }

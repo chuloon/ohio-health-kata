@@ -14,8 +14,24 @@ export class AppComponent {
   endTime;
 
   bill = 0;
+  showBill = false;
 
   timePlaceholder = "hh:mm am/pm"
+
+  checkFieldsForCalculation = () => {
+    if(this.startTime && this.endTime && this.bedTime) {
+      let start = this.startTime.indexOf("_") === -1 ? true : false;
+      let bed = this.bedTime.indexOf("_") === -1 ? true : false;
+      let end = this.endTime.indexOf("_") === -1 ? true : false;
+
+      if(start && bed && end) {
+        this.doCalculation();
+      }
+    }
+    else {
+      this.showBill = false;
+    }
+  }
 
   doCalculation = () => {
     this.bill = 0;
@@ -52,5 +68,7 @@ export class AppComponent {
 
       current = moment(current).add(1, 'h');
     }
+
+    this.showBill = true;
   }
 }
