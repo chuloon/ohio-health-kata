@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0px;
+}
+
+@font-face {
+	font-family: 'regular';
+	src: local('O'),
+		url('assets/Roboto-Thin.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'headline';
+	src: local('O'),
+		url('assets/PoetsenOne-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}

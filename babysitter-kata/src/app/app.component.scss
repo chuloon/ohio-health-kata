@@ -1,0 +1,15 @@
+#container {
+    background: url('../assets/weather.png');
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        font-family: headline;
+    }
+
+    input {
+
+    }
+}

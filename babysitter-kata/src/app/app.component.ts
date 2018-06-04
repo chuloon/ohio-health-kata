@@ -38,7 +38,6 @@ export class AppComponent {
     let current = start;
     
     while(!(moment(current).format('h:m a') === moment(end).format('h:m a'))) {
-      debugger;
       if(current.isSameOrAfter(midnight)) {
         this.bill += 16;
       }
@@ -51,7 +50,5 @@ export class AppComponent {
 
       current = moment(current).add(1, 'h');
     }
-
-    console.log('$' + this.bill);
   }
 }
