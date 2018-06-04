@@ -1,10 +1,25 @@
 <div id="container">
   <div class="title">Babysitting Wage Calculator</div>
 
-  <input type="text" [(ngModel)]="startTime" [textMask]="{ mask: timeMask }">
-  <input type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }">
-  <input type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }">
+  <div class="fields-container">
+    <span>If my babysitting shift is from </span>
+    <input type="text" [(ngModel)]="startTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder">
+    <span> to </span>
+    <input type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder">
+  </div>
+
+  <div class="fields-container">
+    <span> and I put them to bed at </span>
+    <input type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder">
+  </div>
+
+  <div>
+    <span>I will make ${{ bill }} that night.</span>
+  </div>
+
+
+
   <button (click)="doCalculation()">Submit</button>
 
-  <div>{{ bill }}</div>
+
 </div>

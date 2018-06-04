@@ -15,6 +15,8 @@ export class AppComponent {
 
   bill = 0;
 
+  timePlaceholder = "hh:mm am/pm"
+
   doCalculation = () => {
     this.bill = 0;
 
