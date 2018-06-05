@@ -129,6 +129,8 @@ export class AppComponent {
     if(!this.doValidationByField("bedTime", bed, earliestTime, latestTime, "bed")) retVal = false;
     if(!this.doValidationByField("endTime", end, earliestTime, latestTime, "end")) retVal = false;
 
+    if(!this.checkTimeOrder(start, end)) retVal = false;
+
     return retVal;
   }
 
@@ -157,6 +159,18 @@ export class AppComponent {
     }
 
     return retVal;
+  }
+
+  checkTimeOrder = (start: moment.Moment, end: moment.Moment) => {
+    if(end.isBefore(start)) {
+      this.toastr.error("Start time must be before end time");
+      this.setFieldError("start", true);
+      this.setFieldError("end", true);
+
+      return false;
+    }
+
+    return true;
   }
 
   throwTimeRangeError = (field: string) => {
