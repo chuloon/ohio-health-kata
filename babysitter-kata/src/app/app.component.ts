@@ -86,12 +86,22 @@ export class AppComponent {
 
   setBedTimeOptions = () => {
     this.availableBedTimes = [];
-    const start = moment(this.startTime);
-    const end = moment(this.endTime);
+    let start = moment(this.startTime);
+    if(start.isBefore(moment('4:00 pm', 'h:m a'))) {
+      start = moment(start).add(1, 'd');
+    }
+
+    let end = moment(this.endTime);
+    if(end.isBefore(moment('4:00 pm', 'h:m a'))) {
+      end = moment(end).add(1, 'd');
+    }
 
     this.availableHours.forEach(hour => {
-      const current = moment(hour, 'hA');
-      debugger;
+      let current = moment(hour, 'hA');
+      if(current.isBefore(moment('4:00 pm', 'h:m a'))) {
+        current = moment(current).add(1, 'd');
+      }
+
       if(current.isSameOrAfter(start) && current.isSameOrBefore(end)) {
         this.availableBedTimes.push(hour);
       }
