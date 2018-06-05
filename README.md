@@ -22,8 +22,8 @@ I want to calculate my nightly charge<br>*
 Install angular-cli if you don't have it installed already. Then enter the babysitter-kata folder and install
 all the dependencies. Finally, start the app and navigate to localhost: 4200 in your browser.
 
-1: npm install -g @angular/cli
-2: cd babysitter-kata
-3: npm install
-4: ng serve
-5: Navigate to localhost:4200
+1. npm install -g @angular/cli
+2. cd babysitter-kata
+3. npm install
+4. ng serve
+5. Navigate to localhost:4200
