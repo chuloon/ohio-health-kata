@@ -42,6 +42,21 @@ export class AppComponent {
     "4AM",
   ];
 
+  availableBedTimes = [
+    "5PM",
+    "6PM",
+    "7PM",
+    "8PM",
+    "9PM",
+    "10PM",
+    "11PM",
+    "12AM",
+    "1AM",
+    "2AM",
+    "3AM",
+    "4AM",
+  ];
+
   bill = 0;
   showBill = false;
 
@@ -57,15 +72,30 @@ export class AppComponent {
   
   // I had considered making the function only fire when a user unfocused the field, but decided that would annoy or confuse
   // the user on the final field they filled out, as I would expect for it to fire once I completed the time I wanted to type.
-  checkFieldsForCalculation = () => {
+  fieldModelChanged = () => {
     // Check if end and start fields have values. If they do, complete calculation.
     if(this.startTime && this.endTime) {
+        this.setBedTimeOptions();
         this.doCalculation();
     }
     // I put this else in so that if the user deletes one of the fields after filling it out, the bill won't show $0 before the calculation has all the required fields.
     else {
       this.showBill = false;
     }
+  }
+
+  setBedTimeOptions = () => {
+    this.availableBedTimes = [];
+    const start = moment(this.startTime);
+    const end = moment(this.endTime);
+
+    this.availableHours.forEach(hour => {
+      const current = moment(hour, 'hA');
+      debugger;
+      if(current.isSameOrAfter(start) && current.isSameOrBefore(end)) {
+        this.availableBedTimes.push(hour);
+      }
+    });
   }
 
   getDropdownValue = (hour) => {
@@ -143,21 +173,21 @@ export class AppComponent {
     let retVal = true;
 
     if(!this.checkTimeOrder(start, end)) retVal = false;
-    if(!this.checkBedTimeValidity(start, bed, end)) retVal = false;
+    this.checkBedTimeValidity(start, bed, end)
 
     return retVal;
   }
 
   checkBedTimeValidity = (start: moment.Moment, bed: moment.Moment, end: moment.Moment) => {
-    console.log(this.bedTime);
     if(bed.isBetween(start, end) || bed.isSame(start) || bed.isSame(end) || !this.bedTime) {
       this.setFieldError("bed", false);
-      return true;
+
+      return;
     }
 
     this.toastr.error("Bed time must be between start and end times");
     this.setFieldError("bed", true);
-    return false;
+    this.bedTime = undefined;
   }
 
   checkTimeOrder = (start: moment.Moment, end: moment.Moment) => {

@@ -3,12 +3,12 @@
 
   <div class="fields-container">
     <span>If my babysitting shift is from </span>
-    <select id="start" [(ngModel)]="startTime" (ngModelChange)="checkFieldsForCalculation()">
+    <select id="start" [(ngModel)]="startTime" (ngModelChange)="fieldModelChanged()">
       <option disabled [value]="undefined">start</option>
       <option *ngFor="let hour of availableHours" [value]="getDropdownValue(hour)">{{ hour }}</option>
     </select>
     <span> to </span>
-    <select id="end" [(ngModel)]="endTime" (ngModelChange)="checkFieldsForCalculation()">
+    <select id="end" [(ngModel)]="endTime" (ngModelChange)="fieldModelChanged()">
       <option disabled [value]="undefined">end</option>
       <option *ngFor="let hour of availableHours" [value]="getDropdownValue(hour)">{{ hour }}</option>
     </select>
@@ -16,9 +16,9 @@
 
   <div class="fields-container">
     <span> and I put them to bed at </span>
-    <select id="bed" [(ngModel)]="bedTime" (ngModelChange)="checkFieldsForCalculation()">
+    <select id="bed" [(ngModel)]="bedTime" (ngModelChange)="fieldModelChanged()">
       <option [value]="undefined">bed</option>
-      <option *ngFor="let hour of availableHours" [value]="getDropdownValue(hour)">{{ hour }}</option>
+      <option *ngFor="let hour of availableBedTimes" [value]="getDropdownValue(hour)">{{ hour }}</option>
     </select>
   </div>
 
