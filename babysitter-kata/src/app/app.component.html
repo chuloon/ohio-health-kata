@@ -17,7 +17,7 @@
   <div class="fields-container">
     <span> and I put them to bed at </span>
     <select id="bed" [(ngModel)]="bedTime" (ngModelChange)="checkFieldsForCalculation()">
-      <option disabled [value]="undefined">bed</option>
+      <option [value]="undefined">bed</option>
       <option *ngFor="let hour of availableHours" [value]="getDropdownValue(hour)">{{ hour }}</option>
     </select>
   </div>

@@ -15,8 +15,17 @@ export class AppComponent {
 
   // Objects that act as the ngModel for each of the text fields.
   startTime: string;
-  bedTime: string;
   endTime: string;
+
+  private _bedTime: string;
+  get bedTime() {
+    return this._bedTime;
+  }
+
+  set bedTime(value) {
+    if(value == "undefined") this._bedTime = undefined;
+    else this._bedTime = value;
+  }
 
   availableHours = [
     "5PM",
@@ -49,8 +58,8 @@ export class AppComponent {
   // I had considered making the function only fire when a user unfocused the field, but decided that would annoy or confuse
   // the user on the final field they filled out, as I would expect for it to fire once I completed the time I wanted to type.
   checkFieldsForCalculation = () => {
-    // Check if all three fields have values. If they do, complete calculation.
-    if(this.startTime && this.endTime && this.bedTime) {
+    // Check if end and start fields have values. If they do, complete calculation.
+    if(this.startTime && this.endTime) {
         this.doCalculation();
     }
     // I put this else in so that if the user deletes one of the fields after filling it out, the bill won't show $0 before the calculation has all the required fields.
@@ -131,6 +140,27 @@ export class AppComponent {
   }
 
   doValidation = (start:moment.Moment, bed:moment.Moment, end:moment.Moment): boolean => {
+    let retVal = true;
+
+    if(!this.checkTimeOrder(start, end)) retVal = false;
+    if(!this.checkBedTimeValidity(start, bed, end)) retVal = false;
+
+    return retVal;
+  }
+
+  checkBedTimeValidity = (start: moment.Moment, bed: moment.Moment, end: moment.Moment) => {
+    console.log(this.bedTime);
+    if(bed.isBetween(start, end) || bed.isSame(start) || bed.isSame(end) || !this.bedTime) {
+      this.setFieldError("bed", false);
+      return true;
+    }
+
+    this.toastr.error("Bed time must be between start and end times");
+    this.setFieldError("bed", true);
+    return false;
+  }
+
+  checkTimeOrder = (start: moment.Moment, end: moment.Moment) => {
     if(end.isBefore(start)) {
       this.toastr.error("Start time must be before end time");
       this.setFieldError("start", true);
