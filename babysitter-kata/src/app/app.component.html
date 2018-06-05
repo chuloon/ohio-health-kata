@@ -3,14 +3,23 @@
 
   <div class="fields-container">
     <span>If my babysitting shift is from </span>
-    <input id="start" type="text" [(ngModel)]="startTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
+    <select id="start" [(ngModel)]="startTime" (ngModelChange)="checkFieldsForCalculation()">
+      <option disabled [value]="undefined">start</option>
+      <option *ngFor="let hour of availableHours" [value]="getDropdownValue(hour)">{{ hour }}</option>
+    </select>
     <span> to </span>
-    <input id="end" type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
+    <select id="end" [(ngModel)]="endTime" (ngModelChange)="checkFieldsForCalculation()">
+      <option disabled [value]="undefined">end</option>
+      <option *ngFor="let hour of availableHours" [value]="getDropdownValue(hour)">{{ hour }}</option>
+    </select>
   </div>
 
   <div class="fields-container">
     <span> and I put them to bed at </span>
-    <input id="bed" type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
+    <select id="bed" [(ngModel)]="bedTime" (ngModelChange)="checkFieldsForCalculation()">
+      <option disabled [value]="undefined">bed</option>
+      <option *ngFor="let hour of availableHours" [value]="getDropdownValue(hour)">{{ hour }}</option>
+    </select>
   </div>
 
   <div class="bill-label">

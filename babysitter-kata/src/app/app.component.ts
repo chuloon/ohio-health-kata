@@ -18,6 +18,21 @@ export class AppComponent {
   bedTime: string;
   endTime: string;
 
+  availableHours = [
+    "5PM",
+    "6PM",
+    "7PM",
+    "8PM",
+    "9PM",
+    "10PM",
+    "11PM",
+    "12AM",
+    "1AM",
+    "2AM",
+    "3AM",
+    "4AM",
+  ];
+
   bill = 0;
   showBill = false;
 
@@ -34,23 +49,18 @@ export class AppComponent {
   // I had considered making the function only fire when a user unfocused the field, but decided that would annoy or confuse
   // the user on the final field they filled out, as I would expect for it to fire once I completed the time I wanted to type.
   checkFieldsForCalculation = () => {
-    // I'm first doing a check to see if all 3 are even partially filled out. I did this because checkFieldsForCalculation() 
-    // is fired every single time a keypress in one of the fields is detected, and I didn't want to slow down the app
-    // by making tons of function calls needlessly.
+    // Check if all three fields have values. If they do, complete calculation.
     if(this.startTime && this.endTime && this.bedTime) {
-      let start = this.startTime.indexOf("_") === -1 ? true : false;
-      let bed = this.bedTime.indexOf("_") === -1 ? true : false;
-      let end = this.endTime.indexOf("_") === -1 ? true : false;
-
-      // Once we verify that all three fields are completed (we don't have to check for field validity because of the text mask), fire off the calculation.
-      if(start && bed && end) {
         this.doCalculation();
-      }
     }
     // I put this else in so that if the user deletes one of the fields after filling it out, the bill won't show $0 before the calculation has all the required fields.
     else {
       this.showBill = false;
     }
+  }
+
+  getDropdownValue = (hour) => {
+    return moment(hour, 'hA');
   }
 
   doCalculation = () => {
@@ -62,29 +72,29 @@ export class AppComponent {
 
     // I did this because when I was adding an hour in the loop below that it was correctly
     // rolling it into the next hour, but wasn't adding a day as well, so I do that here instead.
-    let start = moment(this.startTime, 'h:m a');
+    let start = moment(this.startTime);
     if(start.isBefore(moment('4:00 pm', 'h:m a'))) {
       start = moment(start).add(1, 'd');
     }
 
-    let bed = moment(this.bedTime, 'h:m a');
+    let bed = moment(this.bedTime);
     if(bed.isBefore(moment('4:00 pm', 'h:m a'))) {
       bed = moment(bed).add(1, 'd');
     }
 
-    let end = moment(this.endTime, 'h:m a');
+    let end = moment(this.endTime);
     if(end.isBefore(moment('4:00 pm', 'h:m a'))) {
       end = moment(end).add(1, 'd');
     }
 
-    const midnight = moment('11:59 pm', 'h:m a');
+    const midnight = moment('12:00 am', 'h:m a').add(1, 'd');
     
     // Do not run the calculation if validation finds an error
-    if(!this.doValidation(start, bed, end)) { return }
+    if(!this.doValidation(start, bed, end)) { this.showBill = false; return }
 
     // Set current to start so we're ready to loop through each hour.
     let current = start;
-    
+
     // Loop through each of the hours (starting with the start time) and decide how much to bill for that hour.
 
     // My first thought was that I could do this without looping at all and handle it in constant time rather than linear
@@ -121,47 +131,6 @@ export class AppComponent {
   }
 
   doValidation = (start:moment.Moment, bed:moment.Moment, end:moment.Moment): boolean => {
-    let retVal = true;
-    const earliestTime = moment("5:00 pm", 'h:m a');
-    const latestTime = moment("4:00 am", 'h:m a').add(1, 'd');
-
-    if(!this.doValidationByField("startTime", start, earliestTime, latestTime, "start")) retVal = false;
-    if(!this.doValidationByField("bedTime", bed, earliestTime, latestTime, "bed")) retVal = false;
-    if(!this.doValidationByField("endTime", end, earliestTime, latestTime, "end")) retVal = false;
-
-    if(!this.checkTimeOrder(start, end)) retVal = false;
-
-    return retVal;
-  }
-
-  doValidationByField = (globalTime, localTime, earliestTime, latestTime, timeLabel) => {
-    let retVal = true;
-    // If startTime is not null
-    if(this[globalTime]) {
-      // Then check if the startTime is invalid or not
-      if(this[globalTime].indexOf("_") != -1) {
-        // Throw an error if it is
-        this.throwInvalidTimeError(timeLabel);
-        retVal = false;
-      }
-      else {
-        // Check the start time to see if it's between 5pm and 4am
-        if(!(localTime.isBetween(earliestTime, latestTime) || localTime.isSame(earliestTime) || localTime.isSame(latestTime))) {
-          // Throw an error if it's not
-          this.throwTimeRangeError(timeLabel);
-          retVal = false;
-        }
-        else {
-          // If it is within the proper range, ensure no error is set
-          this.setFieldError(timeLabel, false);
-        }
-      }
-    }
-
-    return retVal;
-  }
-
-  checkTimeOrder = (start: moment.Moment, end: moment.Moment) => {
     if(end.isBefore(start)) {
       this.toastr.error("Start time must be before end time");
       this.setFieldError("start", true);
@@ -170,17 +139,9 @@ export class AppComponent {
       return false;
     }
 
+    this.setFieldError("start", false);
+    this.setFieldError("end", false);
     return true;
-  }
-
-  throwTimeRangeError = (field: string) => {
-    this.toastr.error(field + " time must be between 5pm and 4am");
-    this.setFieldError(field, true);
-  }
-
-  throwInvalidTimeError = (field: string) => {
-    this.toastr.error("You must provide a valid " + field + " time");
-    this.setFieldError(field, true);
   }
 
   setFieldError = (field: string, isInvalid: boolean) => {
