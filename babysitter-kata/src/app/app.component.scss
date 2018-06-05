@@ -26,6 +26,7 @@
 
     .fields-container {
         padding-bottom: 5px;
+        text-align: center;
     }
 
     span {
@@ -48,5 +49,10 @@
         border-radius: 5px;
         max-width: 150px;
         text-align: center;
+
+        &.invalid {
+            border-color: red;
+            background: rgba(255, 0, 0, 0.2);
+        }
     }
 }

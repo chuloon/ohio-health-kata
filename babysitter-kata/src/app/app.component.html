@@ -3,14 +3,14 @@
 
   <div class="fields-container">
     <span>If my babysitting shift is from </span>
-    <input type="text" [(ngModel)]="startTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
+    <input id="start" type="text" [(ngModel)]="startTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
     <span> to </span>
-    <input type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
+    <input id="end" type="text" [(ngModel)]="endTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
   </div>
 
   <div class="fields-container">
     <span> and I put them to bed at </span>
-    <input type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
+    <input id="bed" type="text" [(ngModel)]="bedTime" [textMask]="{ mask: timeMask }" [placeholder]="timePlaceholder" (ngModelChange)="checkFieldsForCalculation()">
   </div>
 
   <div class="bill-label">

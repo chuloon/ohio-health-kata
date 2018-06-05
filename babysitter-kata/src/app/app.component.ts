@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import * as moment from 'moment';
 
 @Component({
@@ -20,7 +21,11 @@ export class AppComponent {
   bill = 0;
   showBill = false;
 
-  timePlaceholder = "hh:mm am/pm"
+  timePlaceholder = "hh:mm am/pm";
+
+  constructor(private toastr: ToastsManager, vRef: ViewContainerRef) {
+    this.toastr.setRootViewContainerRef(vRef);
+   }
 
   // This function is called every time the ngModel changes. I decided that it would be a cleaner experience for the user if 
   // I removed the submit button I had before. It saves them a click, and thus time. It also seemed unnecessary with such a
@@ -73,6 +78,9 @@ export class AppComponent {
     }
 
     const midnight = moment('11:59 pm', 'h:m a');
+    
+    // Do not run the calculation if validation finds an error
+    if(!this.doValidation(start, bed, end)) { return }
 
     // Set current to start so we're ready to loop through each hour.
     let current = start;
@@ -110,5 +118,63 @@ export class AppComponent {
     // If you take a look at ngClass in the html file, you'll see that by setting showBill to true, that the class, 'show'
     // will be added to the element. In the scss file, I then change the opacity and transform to smoothly transition the final bill.
     this.showBill = true;
+  }
+
+  doValidation = (start:moment.Moment, bed:moment.Moment, end:moment.Moment): boolean => {
+    let retVal = true;
+    const earliestTime = moment("5:00 pm", 'h:m a');
+    const latestTime = moment("4:00 am", 'h:m a').add(1, 'd');
+
+    if(!this.doValidationByField("startTime", start, earliestTime, latestTime, "start")) retVal = false;
+    if(!this.doValidationByField("bedTime", bed, earliestTime, latestTime, "bed")) retVal = false;
+    if(!this.doValidationByField("endTime", end, earliestTime, latestTime, "end")) retVal = false;
+
+    return retVal;
+  }
+
+  doValidationByField = (globalTime, localTime, earliestTime, latestTime, timeLabel) => {
+    let retVal = true;
+    // If startTime is not null
+    if(this[globalTime]) {
+      // Then check if the startTime is invalid or not
+      if(this[globalTime].indexOf("_") != -1) {
+        // Throw an error if it is
+        this.throwInvalidTimeError(timeLabel);
+        retVal = false;
+      }
+      else {
+        // Check the start time to see if it's between 5pm and 4am
+        if(!(localTime.isBetween(earliestTime, latestTime) || localTime.isSame(earliestTime) || localTime.isSame(latestTime))) {
+          // Throw an error if it's not
+          this.throwTimeRangeError(timeLabel);
+          retVal = false;
+        }
+        else {
+          // If it is within the proper range, ensure no error is set
+          this.setFieldError(timeLabel, false);
+        }
+      }
+    }
+
+    return retVal;
+  }
+
+  throwTimeRangeError = (field: string) => {
+    this.toastr.error(field + " time must be between 5pm and 4am");
+    this.setFieldError(field, true);
+  }
+
+  throwInvalidTimeError = (field: string) => {
+    this.toastr.error("You must provide a valid " + field + " time");
+    this.setFieldError(field, true);
+  }
+
+  setFieldError = (field: string, isInvalid: boolean) => {
+    if(isInvalid) {
+      document.getElementById(field).classList.add("invalid");
+    }
+    else {
+      document.getElementById(field).classList.remove("invalid");
+    }
   }
 }
