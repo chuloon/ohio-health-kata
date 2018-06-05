@@ -84,8 +84,12 @@ export class AppComponent {
     }
   }
 
+  // This fires every time both the start and end times are filled out
   setBedTimeOptions = () => {
+    // Reset the array for available bed times, so we can start from the top
     this.availableBedTimes = [];
+
+    // Similar to how we handled the other places, we increment the day if the time falls after midnight
     let start = moment(this.startTime);
     if(start.isBefore(moment('4:00 pm', 'h:m a'))) {
       start = moment(start).add(1, 'd');
@@ -96,6 +100,7 @@ export class AppComponent {
       end = moment(end).add(1, 'd');
     }
 
+    // For each of the hours available, loop through and add that hour if it falls between the start and end times.
     this.availableHours.forEach(hour => {
       let current = moment(hour, 'hA');
       if(current.isBefore(moment('4:00 pm', 'h:m a'))) {
@@ -179,27 +184,17 @@ export class AppComponent {
     this.showBill = true;
   }
 
+  // Check to see if the form is valid
   doValidation = (start:moment.Moment, bed:moment.Moment, end:moment.Moment): boolean => {
     let retVal = true;
 
     if(!this.checkTimeOrder(start, end)) retVal = false;
-    this.checkBedTimeValidity(start, bed, end)
 
     return retVal;
   }
 
-  checkBedTimeValidity = (start: moment.Moment, bed: moment.Moment, end: moment.Moment) => {
-    if(bed.isBetween(start, end) || bed.isSame(start) || bed.isSame(end) || !this.bedTime) {
-      this.setFieldError("bed", false);
-
-      return;
-    }
-
-    this.toastr.error("Bed time must be between start and end times");
-    this.setFieldError("bed", true);
-    this.bedTime = undefined;
-  }
-
+  // This checks to see if the start time will always be before the end time. I could have made a system similar to how I handle the bed time, but I decided this would be a less
+  // confusing experience for the user, as well as I wanted to demonstrate invalid fields in the app
   checkTimeOrder = (start: moment.Moment, end: moment.Moment) => {
     if(end.isBefore(start)) {
       this.toastr.error("Start time must be before end time");
